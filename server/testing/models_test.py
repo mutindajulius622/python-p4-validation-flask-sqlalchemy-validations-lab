@@ -9,6 +9,7 @@ from faker import Faker
 LOGGER = logging.getLogger(__name__)
 
 
+@pytest.mark.usefixtures('test_app')
 class TestAuthor:
     '''Class Author in models.py'''
 
@@ -52,12 +53,13 @@ class TestAuthor:
 
             with pytest.raises(ValueError):
                 LOGGER.info("testing long phone number")
-                author2 = Author(name="Jane Author", phone_number="3312212121212121")
+                author2 = Author(name="Janet Author", phone_number="3312212121212121")
                 
             with pytest.raises(ValueError):
                 LOGGER.info("testing non-digit")
-                author3 = Author(name="Jane Author", phone_number="123456789!")
+                author3 = Author(name="Janice Author", phone_number="123456789!")
 
+@pytest.mark.usefixtures('test_app')
 class TestPost:
     '''Class Post in models.py'''
 
@@ -77,12 +79,12 @@ class TestPost:
             
             #valid content length
             content_string1 = 'A' * 250
-            post1 = Post(title='Secret Why I love programming.', content=content_string1, category='Non-Fiction')
+            post1 = Post(title='I love programming.', content=content_string1, category='Non-Fiction')
             
             with pytest.raises(ValueError):
                 #too short
                 content_string2 = 'A' * 249
-                post2 = Post(title='Guess Why I love programming.', content=content_string2, category='Non-Fiction')
+                post2 = Post(title='I also love programming.', content=content_string2, category='Non-Fiction')
 
     def test_summary_length(self):
         '''Summary too long test. More than 250 chars.'''
@@ -93,12 +95,12 @@ class TestPost:
             
             # valid summary string
             summary_string1 = "T" * 250
-            post1 = Post(title='You Won\'t Believe Why I love programming..', content=content_string, summary= summary_string1, category='Non-Fiction')
+            post1 = Post(title='I really love programming.', content=content_string, summary= summary_string1, category='Non-Fiction')
             
             # too long
             summary_string2 = "T" * 251
             with pytest.raises(ValueError):
-                post2 = Post(title='Top Reasons Why I love programming..', content=content_string, summary= summary_string2, category='Non-Fiction')
+                post2 = Post(title='I super love programming.', content=content_string, summary= summary_string2, category='Non-Fiction')
 
 
     def test_category(self):
@@ -107,7 +109,7 @@ class TestPost:
         with app.app_context():
             content_string = "A" * 251
             with pytest.raises(ValueError):
-                post = Post(title='Top Ten Reasons I Love Programming.', content=content_string, category='Banana')
+                post = Post(title='I love programming a lot.', content=content_string, category='Banana')
 
 
     def test_clickbait(self):
